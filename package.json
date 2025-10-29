@@ -1,0 +1,39 @@
+{
+  "name": "@woodman231/create-typescript-cli",
+  "version": "1.0.0",
+  "description": "Create a new TypeScript CLI application",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "create-typescript-cli": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "template/**/*"
+  ],
+  "scripts": {
+    "build": "echo 'No build needed for this template generator'",
+    "test": "echo 'No tests configured'"
+  },
+  "keywords": [
+    "typescript",
+    "cli",
+    "template",
+    "generator",
+    "create"
+  ],
+  "author": "Sean Woodward",
+  "license": "MIT",
+  "dependencies": {
+    "fs-extra": "^11.0.0",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.0",
+    "@types/prompts": "^2.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/woodman231/create-typescript-cli.git"
+  }
+}
