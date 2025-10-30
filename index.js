@@ -74,11 +74,11 @@ async function main() {
   const indexPath = path.join(targetDir, 'src', 'index.ts');
   let indexContent = await fs.readFile(indexPath, 'utf8');
   indexContent = indexContent.replace(
-    '.name(\'extract-image-texts\')',
+    '.name(\'my-cli-app\')',
     `.name('${response.commandName}')`
   );
   indexContent = indexContent.replace(
-    '.description(\'A CLI application to extract text from images\')',
+    '.description(\'A simple CLI application that echoes your name\')',
     `.description('${response.description}')`
   );
   await fs.writeFile(indexPath, indexContent);
@@ -86,10 +86,10 @@ async function main() {
   // Update README
   const readmePath = path.join(targetDir, 'README.md');
   let readmeContent = await fs.readFile(readmePath, 'utf8');
-  readmeContent = readmeContent.replace(/Extract Image Texts/g, response.projectName);
-  readmeContent = readmeContent.replace(/extract-image-texts/g, response.commandName);
+  readmeContent = readmeContent.replace(/My CLI App/g, response.projectName);
+  readmeContent = readmeContent.replace(/my-cli-app/g, response.commandName);
   readmeContent = readmeContent.replace(
-    'A CLI application to extract text from images using OCR (Optical Character Recognition).',
+    'A simple CLI application that echoes your name with optional transformations.',
     response.description
   );
   await fs.writeFile(readmePath, readmeContent);
