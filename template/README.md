@@ -398,6 +398,82 @@ await app.run(['node', 'cli', 'file-info', '-p', 'test.txt']);
 - `npm run lint`: Run ESLint
 - `npm run lint:fix`: Run ESLint with auto-fix
 
+## 🛠️ Local Development Tips
+
+### Testing Your CLI Locally with npm link
+
+When developing your CLI, you can test it as if it were installed globally without actually publishing it:
+
+#### 1. Link Your Package Globally
+```bash
+# From your project directory
+npm link
+```
+
+This creates a global symlink to your project, making the command available system-wide.
+
+#### 2. Use Your Command Anywhere
+```bash
+# Now you can run your CLI from any directory
+{{COMMAND_NAME}} echo -n "Testing"
+```
+
+#### 3. Develop with Watch Mode
+For the best development experience, keep the build process running in watch mode:
+
+```bash
+# Terminal 1: Keep TypeScript compiling automatically
+npm run build:watch
+```
+
+```bash
+# Terminal 2: Test your changes immediately
+{{COMMAND_NAME}} echo -n "Testing new features"
+```
+
+Any changes you make to the TypeScript source will be automatically compiled, and since your package is linked, the global command will use the latest build immediately.
+
+#### 4. Unlink When Done
+When you're finished developing or want to test a fresh install:
+
+```bash
+# Remove the global symlink
+npm unlink -g {{COMMAND_NAME}}
+
+# Or equivalently
+npm unlink
+```
+
+#### 5. Test Fresh Installation
+After unlinking, you can test the installation process:
+
+```bash
+# Build the package
+npm run build
+
+# Install globally (after publishing to npm)
+npm install -g {{PROJECT_NAME}}
+
+# Or install from the local directory
+npm install -g .
+```
+
+### Development Workflow Summary
+
+**Recommended workflow for active development:**
+1. `npm link` - Create global link once
+2. `npm run build:watch` - Keep running in one terminal
+3. Make changes to TypeScript files
+4. Test with `{{COMMAND_NAME}}` - Changes apply automatically
+5. `npm unlink -g {{COMMAND_NAME}}` - Clean up when finished
+
+**For testing installation:**
+1. `npm unlink -g {{COMMAND_NAME}}` - Remove dev link if present
+2. `npm run build` - Build the project
+3. `npm install -g .` - Install from local directory
+4. Test the installed version
+5. `npm uninstall -g {{COMMAND_NAME}}` - Uninstall when done
+
 ## 🔧 Configuration
 
 ### Environment Variables
