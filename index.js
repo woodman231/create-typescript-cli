@@ -35,8 +35,14 @@ async function main() {
       type: 'text',
       name: 'commandName',
       message: 'CLI command name:',
-      initial: prev => prev.replace(/[^a-z0-9-]/gi, '-').toLowerCase(),
+      initial: (prev, values) => values.projectName.replace(/[^a-z0-9-]/gi, '-').toLowerCase(),
       validate: value => /^[a-z0-9-]+$/.test(value) ? true : 'Command name must contain only lowercase letters, numbers, and hyphens'
+    },
+    {
+      type: 'text',
+      name: 'license',
+      message: 'License:',
+      initial: 'ISC'
     }
   ]);
 
@@ -66,7 +72,8 @@ async function main() {
     .replace(/{{PROJECT_NAME}}/g, response.projectName)
     .replace(/{{DESCRIPTION}}/g, response.description)
     .replace(/{{AUTHOR}}/g, response.author)
-    .replace(/{{COMMAND_NAME}}/g, response.commandName);
+    .replace(/{{COMMAND_NAME}}/g, response.commandName)
+    .replace(/{{LICENSE}}/g, response.license);
 
   await fs.writeFile(packageJsonPath, packageJsonContent);
 
@@ -86,12 +93,14 @@ async function main() {
   // Update README
   const readmePath = path.join(targetDir, 'README.md');
   let readmeContent = await fs.readFile(readmePath, 'utf8');
-  readmeContent = readmeContent.replace(/My CLI App/g, response.projectName);
-  readmeContent = readmeContent.replace(/my-cli-app/g, response.commandName);
-  readmeContent = readmeContent.replace(
-    'A simple CLI application that echoes your name with optional transformations.',
-    response.description
-  );
+  
+  readmeContent = readmeContent
+    .replace(/{{PROJECT_NAME}}/g, response.projectName)
+    .replace(/{{DESCRIPTION}}/g, response.description)
+    .replace(/{{AUTHOR}}/g, response.author)
+    .replace(/{{COMMAND_NAME}}/g, response.commandName)
+    .replace(/{{LICENSE \|\| 'ISC'}}/g, response.license);
+
   await fs.writeFile(readmePath, readmeContent);
 
   console.log('✅ Project created successfully!\n');
