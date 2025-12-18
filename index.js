@@ -11,12 +11,29 @@ const __dirname = path.dirname(__filename);
 async function main() {
   console.log('🚀 Creating a new TypeScript CLI application...\n');
 
+  // Get folder name from command line argument
+  const args = process.argv.slice(2);
+  const folderName = args[0];
+
+  if (!folderName) {
+    console.error('❌ Please provide a folder name');
+    console.log('Usage: npm create @woodman231/typescript-cli <folder-name>');
+    process.exit(1);
+  }
+
+  const targetDir = path.resolve(process.cwd(), folderName);
+
+  if (fs.existsSync(targetDir)) {
+    console.error(`❌ Directory ${folderName} already exists`);
+    process.exit(1);
+  }
+
   const response = await prompts([
     {
       type: 'text',
       name: 'projectName',
       message: 'What is your project name?',
-      initial: 'my-cli-app',
+      initial: folderName,
       validate: value => value.length > 0 ? true : 'Project name is required'
     },
     {
@@ -51,10 +68,8 @@ async function main() {
     process.exit(0);
   }
 
-  const targetDir = path.resolve(process.cwd(), response.projectName);
-
   if (fs.existsSync(targetDir)) {
-    console.error(`❌ Directory ${response.projectName} already exists`);
+    console.error(`❌ Directory ${folderName} already exists`);
     process.exit(1);
   }
 
@@ -105,7 +120,7 @@ async function main() {
 
   console.log('✅ Project created successfully!\n');
   console.log('Next steps:');
-  console.log(`  cd ${response.projectName}`);
+  console.log(`  cd ${folderName}`);
   console.log('  npm install');
   console.log('  npm run dev');
   console.log('\nHappy coding! 🎉');
