@@ -8,7 +8,6 @@ import { CompositeLogger } from '../infrastructure/logging/CompositeLogger.js';
 import { CommandRegistry } from '../infrastructure/commands/CommandRegistry.js';
 import { EchoCommand } from '../commands/echo/EchoCommand.js';
 import { CLIApplication } from './CLIApplication.js';
-import { ILogger } from '../core/interfaces/ILogger.js';
 
 export class ApplicationBootstrapper {
   static async bootstrap(): Promise<CLIApplication> {
@@ -21,6 +20,7 @@ export class ApplicationBootstrapper {
     // Load configuration
     const configService = container.resolve<ConfigurationService>('configurationService');
     const config = await configService.load(process.argv);
+    container.registerInstance('config', config);
 
     // Register logger based on configuration
     const compositeLogger = new CompositeLogger();
@@ -34,14 +34,12 @@ export class ApplicationBootstrapper {
     container.registerInstance('logger', compositeLogger);
 
     // Register command registry and commands
-    const commandRegistry = new CommandRegistry();
-    const logger = container.resolve<ILogger>('logger');
+    const commandRegistry = new CommandRegistry();    
     
     // Register all commands
-    commandRegistry.register(new EchoCommand(logger, config));
+    commandRegistry.register(new EchoCommand(container));
     
-    container.registerInstance('commandRegistry', commandRegistry);
-    container.registerInstance('config', config);
+    container.registerInstance('commandRegistry', commandRegistry);    
 
     // Create and return CLI application
     return new CLIApplication(container);

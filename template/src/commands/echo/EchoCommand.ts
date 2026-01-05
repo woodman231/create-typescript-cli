@@ -1,16 +1,15 @@
 import { Command } from 'commander';
 import { BaseCommand } from '../base/BaseCommand.js';
 import { CommandResult } from "../../core/types/CommandResult.js";
-import { CLIAppConfiguration } from '../../core/types/Configuration.js';
 import { EchoOptions, EchoOptionsSchema } from './EchoOptions.js';
-import { ILogger } from '../../core/interfaces/ILogger.js';
+import { DIContainer } from '../../infrastructure/di/DIContainer.js';
 
 export class EchoCommand extends BaseCommand {
   readonly name = 'echo';
   readonly description = 'Echo your name with optional transformations';
 
-  constructor(logger: ILogger, private config: CLIAppConfiguration) {
-    super(logger);
+  constructor(diContainer: DIContainer) {
+    super(diContainer);
   }
 
   configure(program: Command): void {
@@ -30,7 +29,7 @@ export class EchoCommand extends BaseCommand {
           });
 
           // Use the injected configuration instead of manually parsing
-          const result = await this.executeCommand(options, this.config);
+          const result = await this.executeCommand(options);
           
           if (!result.success) {
             process.exit(1);
@@ -42,7 +41,7 @@ export class EchoCommand extends BaseCommand {
       });
   }
 
-  protected async executeCommand(options: EchoOptions, _config: CLIAppConfiguration): Promise<CommandResult> {
+  protected async executeCommand(options: EchoOptions): Promise<CommandResult> {
     // Debug: Show current configuration
     this.logger.debug(`Current log level: ${this.config.logLevel}`);
     this.logger.debug(`Verbose mode: ${this.config.verbose}`);
